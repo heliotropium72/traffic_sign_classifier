@@ -30,14 +30,23 @@ The goals / steps of this project are the following:
 [test1]: ./test_images/speed_limit_50_photo.jpg "Speed limit"
 [test2]: ./test_images/speed_limit_50.jpg "Speed limit"
 
+[imgDataset]: ./report_images/exampledata.png "Example"
+[imgAugmented]: ./report_images/augmented.png "Augemented image"
+
+[label_dist1]: ./report_images/labels1.png "Distribution of labels"
+[label_dist2]: ./report_images/labels2.png "Distribution of labels after augmentation"
+
 
 ### Dependencies
-This lab requires:
+This notebook requires:
+- Python 3.3 or above
+- Tensorflow 1.3.0 or above
+- OpenCV
+- Pandas
 
-* [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit)
+The easiest way to get started is using the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit) and upgrading/ installing the above packages. The lab environment can be created with CarND Term1 Starter Kit. Click [here](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) for the details.
 
-The lab environment can be created with CarND Term1 Starter Kit. Click [here](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) for the details.
-
+The notebook should be run using GPUs. If local GPUs are not available consider using a web service e.g. AWS. On AWS, there is a Community AMI "Udacity self-driving car" which can be used after upgrading to a newer version of tensorflow.
 
 ## Rubric Points
 ###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
@@ -51,10 +60,9 @@ You're reading it! and here is a link to my [project code](https://github.com/ud
 
 ###Data Set Summary & Exploration
 
-####1. Provide a basic summary of the data set. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
+####1. Basic summary of the data set
 
-I used the pandas library to calculate summary statistics of the traffic
-signs data set:
+I used the pandas library to calculate summary statistics of the traffic signs data set:
 
 * The size of training set is 34799
 * The size of the validation set is 4410
@@ -62,86 +70,116 @@ signs data set:
 * The shape of a traffic sign image is 32x32x3
 * The number of unique classes/labels in the data set is 43
 
-####2. Include an exploratory visualization of the dataset.
-
-Here is an exploratory visualization of the data set. It is a bar chart showing how the data is distributed over the labels. The traffic sign "speed limit (50km/h)" is the most common sign while the traffic sign "speed limit (20km/h)" is the least common one.
-
-![alt text][image1]
-
-###Design and Test a Model Architecture
-
-####1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.)
-
-As a first step, I decided to convert the images to grayscale because ...
-
-Here is an example of a traffic sign image before and after grayscaling.
-
-![alt text][image2]
-
-As a last step, I normalized the image data because ...
-
-I decided to generate additional data because ... 
-
-To add more data to the the data set, I used the following techniques because ... 
-
-Here is an example of an original image and an augmented image:
-
-![alt text][image3]
-
-The difference between the original data set and the augmented data set is the following ... 
+In the following 15 random images of the dataset are displayed.
+![alt text][imgDataset]
 
 
-####2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
+####2. Exploratory visualization of the dataset.
 
-My final model consisted of the following layers:
+![alt text][label_dist1]
 
-| Layer         		|     Description	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| Input         		| 32x32x3 RGB image   							| 
-| Convolution 3x3     	| 1x1 stride, same padding, outputs 32x32x64 	|
-| RELU					|												|
-| Max pooling	      	| 2x2 stride,  outputs 16x16x64 				|
-| Convolution 3x3	    | etc.      									|
-| Fully connected		| etc.        									|
-| Softmax				| etc.        									|
-|						|												|
-|						|												|
- 
+The labels are not equality distributed over the dataset. The data set consists to 5.8% of the traffic sign "speed limit (50km/h)" but only to 0.5% of the traffic sign "speed limit (20km/h)". All over traffic signs are contained in the between interval.
+Here is an exploratory visualization of the data set. It is a bar chart showing how the data is distributed over the labels. The traffic sign "speed limit (50km/h)" is the most common sign while the traffic sign "speed limit (20km/h)" is the least common one. Hence, the model might get biased towards frequent labels. This could be checked for example with the recall and precision metrics (but is not done here). Adding more images with less frequent labels can circumvent this potential biases and has a side effect that the model is less likely to overfit to the data due to the larger dataset.
 
 
-####3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
+### Design and Test a Model Architecture
 
-To train the model, I used an ....
+####1. Data augmentation
+The dataset was augmentated by randomly modified copies of the original images. Tensorflow's own data augementaion functions were used to this end.
 
-####4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
+Function1
+Function2
+
+Every label was augemented by at least xx images until the label contained at least xx images.
+After augementaion, the training data contained ... images. The labels are distributed more equally now.
+
+Here is an example of a randomly modified image (right) in comparison to the original image (left):
+
+![alt text][imgAugemented]
+
+####1. Image preprocessing
+
+The image were converted to grayscale and then normalized using
+'(data - np.array(data).mean()) / np.array(data).std()'
+
+Here is an example of a traffic sign image before and after preprocessing.
+
+![alt text][imgPreprocessed]
+
+I used grayscaling to reduce the dimensionality of the data. However I considered adding the red and blue channels after thresholding since the traffic signs consist mainly of the colours black, white, red and blue.
+The normalization is necessary so that the weights can be similar for every image and that the model does not get biased towards particularly "bright" images.
+
+####2. Model architecture 
+![LeNet Architecture](examples/lenet.png)
+Source: Yan LeCun
+
+The LeNet Convolutional network was adapted to the traffic sign recognition problem by changing the output classes to 43 and adding dropout layers in the fully connected layers in order to prevent overfitting. The resulting model architecture is the following:
+
+| Layer         		 |     Description	         | Input | Output | Parameters |
+|:----------------------:|:-------------------------:|:-------: | :--------:|:----------:|
+| Convolution 5x5        | 1x1 stride, valid padding | 32x32x1  | 28x28x6   | 582  |
+| Activation			 | ReLU					     |          |           |      |
+| Max pooling	      	 | 2x2 stride				 | 28x28x6  | 14x14x6   |      |
+| Convolution 5x5        | 1x1 stride, valid padding | 14x14x6  | 10x10x12  |      |
+| Activation			 | ReLU					     |          |           |      |
+| Max pooling	      	 | 2x2 stride				 | 10x10x12 | 5x5x12    |      |
+| Flatten                | from 3D to 1D             | 5x5x12   | 400       |      |
+| Fully connected		 |          				 | 400      | 200       |      |
+| Activation			 | ReLU					     |          |           |      |
+| Dropout                | Probability: 75%          |          |           |      |          
+| Fully connected		 |          				 | 200      | 84        |      |
+| Activation			 | ReLU					     |          |           |      |
+| Dropout                | Probability: 75%          |          |           |      |
+| Fully connected(Logits)|							 | 84       | 43        |      |
+| Softmax                |                           |          |           |      |
+|:----------------------:|:-------------------------:|:-------: | :--------:|:----------:|
+| Total                  |                           |          |           |  ???    |
+
+
+I decided to use the basic LeNet model because my own modifications (inception layers, deeper networks,...) did not improve the accuracy significantly. Hence, I prefered using a simple model and rather finish the project than searching for the perfect solution. The LeNet architecture is already suited to the image dimensions and thus needs only few adaptions. Since more output classes (43 instead of 10) are present, a deeper or more complex convolutional network (e.g. based on AlexNet) would be better suited.
+
+
+####3. Model training
+The model was trained with gradient descent. After every epoch the loass of the cross entropy is calculated and then minimized using the Adam optimizer.
+The following hyperparameters were used for training as they showed the best trade-off between overfitting (dropout,...), oscillating accuracy (large learning rate, small batch number,...) and training time (number of epochs,...). 
+
+| Hyperparameter | Value  | 
+|:--------------:|:------:|
+| Learning rate  | 0.0008 |
+| Dropout	     | 0.75   | 
+| Batch size     | 512    |
+| Epochs         | 30     |
+
+
+####4. Model validation
+e.g. training accuracy >> validation accuracy)
+
+After finding the right steps for image augmentation and preprocessing, only the hyperparameters were tuned. I tried several combinations and checked the behavior of the model for
+- overfitting e.g. if training accuracy >> validation accuracy >> test accuracy -> increase dropout
+- oscillation of the accuracy -> decrease learning rate, increase batch size
+- saturation of the accuracy -> increase learning rate, increase number of epochs
+- training time -> decrease number of epochs, decrease batch size (more parallelisation)
+
 
 My final model results were:
 * training set accuracy of ?
 * validation set accuracy of ? 
 * test set accuracy of ?
 
-If an iterative approach was chosen:
-* What was the first architecture that was tried and why was it chosen?
-* What were some problems with the initial architecture?
-* How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to overfitting or underfitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.
-* Which parameters were tuned? How were they adjusted and why?
-* What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
 
-If a well known architecture was chosen:
-* What architecture was chosen?
-* Why did you believe it would be relevant to the traffic sign application?
-* How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
- 
+### Test the Model on New Images
 
-###Test a Model on New Images
-
-####1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
-
-Here are five German traffic signs that I found on the web:
+####1. German traffic signs from the internet
+The test images are a mixture of photos and pictograms at different cropings and perspectives. Also modified versions of the original traffic signs are present. I selected the following 15 traffic signs:
 
 ![alt text][test1] ![alt text][test2] ![alt text][image6] 
 ![alt text][image7] ![alt text][image8]
 
+Short overview table of the traffic signes
+
+|Image| Difficulty|
+|:--:|:--:|
+|image|comment|
 
 The first image is a photo "Speed limit (50km/h)" and the second image is pictogram of the same sign. This is the sign type which is most present in the training set (5.8%) and it should be easy for the model to predict them correctly.
 
@@ -152,17 +190,18 @@ The fourth image is a speed limit (20km/h) which is the least present sign type 
 The fifth image is a photo of a "no entry" sign which was modified in a funny way. Such modifications could be caused by obscured sight in reality.
 
 
-####2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
+####2. Predictions of test images
+Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
 Here are the results of the prediction:
 
-| Image			        |     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| Stop Sign      		| Stop sign   									| 
-| U-turn     			| U-turn 										|
-| Yield					| Yield											|
-| 100 km/h	      		| Bumpy Road					 				|
-| Slippery Road			| Slippery Road      							|
+| Image			        |     Prediction	        					| Probability|
+|:---------------------:|:---------------------------------------------:| :---:|
+| Stop Sign      		| Stop sign   									| |
+| U-turn     			| U-turn 										||
+| Yield					| Yield											||
+| 100 km/h	      		| Bumpy Road					 				||
+| Slippery Road			| Slippery Road      							||
 
 
 The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
@@ -185,6 +224,54 @@ For the first image, the model is relatively sure that this is a stop sign (prob
 For the second image ... 
 
 ### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
-####1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
+was not done yet
 
+
+### Appendix: Calculation of model parameters
+The dimensions of every layer can be caluclated according to the following equations:
+
+Input size = input_width x input_height, x input_depth (here: 32x32x3)
+
+Variables:
+* Input size $H_{in}$ x $W_{in}$ x $D_{in}$
+* Output size $H_{out}$ x $W_{out}$ x $D_{out}$
+* Filter size $H_{filter}$ x $W_{filter}$ x $N_{filter}$
+* Stride $S$
+* Padding $P$ ('VALID':0, 'SAME':?, 'ZERO':?)
+
+(Width and hights are symmetric here and thus only the caluclation of the width is shown in the following.)
+
+1. Convolution Layer
+    * Dimensions:
+    \begin{equation}
+        W_{out} = \dfrac{W_{in} − W_{filter} + 2P}{S} + 1
+    \end{equation}
+    \begin{equation}
+        D_{out} = N_{filter}
+    \end{equation}
+
+    * Number of Parameters in this layer (parameter sharing!):
+    \begin{align}
+        NP_{layer} &= NP_{filter} \cdot N_{filter} + NP_{bias} \\
+                    &=  (W_{filter} \cdot H_{filter} \cdot N_{filter} + 1) \cdot D_{out}
+    \end{align}
+
+2. Pooling Layer
+Pooling is as a convolution with a single filter. However, the filter is not defined by weights but by chosing the maximum/average/... . Hence, the same equation holds.
+
+    \begin{equation}
+        W_{out} = \dfrac{W_{in} − W_{filter} + 2P}{S} + 1
+    \end{equation}
+    \begin{equation}
+        D_{out} = D_{in}
+    \end{equation}
+
+3. Fully Connected Layer
+
+    Total parameters:
+    Number of Parameters $NP$
+    \begin{align}
+        NP_{layer} &= NP_{filter} \cdot N_{output,neurons} + NP_{bias} \\
+                    &=  (W_{filter} \cdot H_{filter} \cdot N_{filter} + 1) \cdot W_{out} \cdot H_{out} \cdot D_{out}
+    \end{align}
 
