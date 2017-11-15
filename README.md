@@ -3,24 +3,14 @@
 
 ### Overview
 ---
-In this project, traffic sign recognition classifier is build and trained using images from the [German Traffic Sign Dataset](http://benchmark.ini.rub.de/?section=gtsrb&subsection=dataset). The trained model can then be used to predict traffic signs taken from the internet. In this readme the [implementaion](https://github.com/heliotropium72/traffic_sign_classifier/blob/master/Traffic_Sign_Classifier.ipynb) is described in detail and all questions from the [project rubric](https://review.udacity.com/#!/rubrics/481/view) are answered.
+In this project, a traffic sign recognition classifier is build and trained using images from the [German Traffic Sign Dataset](http://benchmark.ini.rub.de/?section=gtsrb&subsection=dataset). The trained model can then be used to predict traffic signs taken from the internet. In this readme the [implementaion](https://github.com/heliotropium72/traffic_sign_classifier/blob/master/Traffic_Sign_Classifier.ipynb) is described in detail and all questions from the [project rubric](https://review.udacity.com/#!/rubrics/481/view) are answered.
 
 [//]: # (Image References)
 
-[image1]: ./examples/visualization.jpg "Visualization"
-[image2]: ./examples/grayscale.jpg "Grayscaling"
-[image3]: ./examples/random_noise.jpg "Random Noise"
-[image4]: ./examples/placeholder.png "Traffic Sign 1"
-[image5]: ./examples/placeholder.png "Traffic Sign 2"
-[image6]: ./examples/placeholder.png "Traffic Sign 3"
-[image7]: ./examples/placeholder.png "Traffic Sign 4"
-[image8]: ./examples/placeholder.png "Traffic Sign 5"
-
-[test1]: ./test_images/speed_limit_50_photo.jpg "Speed limit"
-[test2]: ./test_images/speed_limit_50.jpg "Speed limit"
-
 [imgDataset]: ./report_images/exampledata.png "Example"
 [imgAugmented]: ./report_images/augmented.png "Augemented image"
+[imgPreprocessed]: ./report_images/preprocessed.png "Preprocessed image"
+[imgTest]: ./report_images/testimages.png "Test image"
 
 [label_dist1]: ./report_images/labels1.png "Distribution of labels"
 [label_dist2]: ./report_images/labels2.png "Distribution of labels after augmentation"
@@ -64,22 +54,24 @@ Here is an exploratory visualization of the data set. It is a bar chart showing 
 ## Design and Test a Model Architecture
 
 ### 1. Data augmentation
-The dataset was augmentated by randomly modified copies of the original images. Tensorflow's own data augementaion functions were used to this end.
+The dataset was augmentated by randomly modified copies of the original images. The `tensorflow.image` module offers already several functions for data augmentation:
+- random saturation
+- random contrast
+- random brightness
+- random crop (not applicable, without resizing separately)
 
-Function1
-Function2
-
-Every label was augemented by at least xx images until the label contained at least xx images.
-After augementaion, the training data contained ... images. The labels are distributed more equally now.
-
-Here is an example of a randomly modified image (right) in comparison to the original image (left):
-
+I used a combination of all functions to augement the data set. In the following is the result for a test image.
 ![alt text][imgAugemented]
+
+Every label was augemented by at least 10 images until the label contained at least 500 images.
+After augementaion, the training data contained ... images. The labels are distributed more equally now.
+![alt text][label_dist2]
+
 
 ### 1. Image preprocessing
 
 The image were converted to grayscale and then normalized using
-'(data - np.array(data).mean()) / np.array(data).std()'
+`data - np.array(data).mean()) / np.array(data).std()`
 
 Here is an example of a traffic sign image before and after preprocessing.
 
@@ -141,9 +133,11 @@ After finding the right steps for image augmentation and preprocessing, only the
 
 
 My final model results were:
-* training set accuracy of ?
-* validation set accuracy of ? 
-* test set accuracy of ?
+|Data set  | Accuracy |
+|:--------:|:--------:|
+|Training  | ? |
+|Validation| ? |
+|Test      | ?|
 
 
 ## Test the Model on New Images
@@ -151,22 +145,29 @@ My final model results were:
 ### 1. German traffic signs from the internet
 The test images are a mixture of photos and pictograms at different cropings and perspectives. Also modified versions of the original traffic signs are present. I selected the following 15 traffic signs:
 
-![alt text][test1] ![alt text][test2] ![alt text][image6] 
-![alt text][image7] ![alt text][image8]
+![alt text][imgTest]
 
 Short overview table of the traffic signes
 
 |Image| Difficulty|
 |:--:|:--:|
-|image|comment|
+|Speed Limit (20km/h) |pictogram|
+|Speed Limit (20km/h) ||
+|Speed Limit (30km/h) |zone sign|
+|Speed Limit (50km/h) |pictogram|
+|Speed Limit (50km/h) ||
+|No passing | |
+|No entry | Funny modification / obscured |
+|General caution| not centered|
+|Dangerous curve to the left| small |
+|Dangerous curve to the left||
+|Slippery road | |
+|Road Work | pictogram |
+|Pedestrians| painted on street|
+|Pedestrians||
+|Keep right | |
 
-The first image is a photo "Speed limit (50km/h)" and the second image is pictogram of the same sign. This is the sign type which is most present in the training set (5.8%) and it should be easy for the model to predict them correctly.
-
-The third image is a no pasing.
-
-The fourth image is a speed limit (20km/h) which is the least present sign type in the training set.
-
-The fifth image is a photo of a "no entry" sign which was modified in a funny way. Such modifications could be caused by obscured sight in reality.
+There are images which belong to the most common classes ("Speed limit (50km/h)") with 5.8% presence in the original training data and image of classes with few data ("Speed limit (20km/h)", "Dangerous curve to the left", "Pedestrians").
 
 
 ### 2. Predictions of test images
@@ -176,16 +177,27 @@ Here are the results of the prediction:
 
 | Image			        |     Prediction	        					| Probability|
 |:---------------------:|:---------------------------------------------:| :---:|
-| Stop Sign      		| Stop sign   									| |
-| U-turn     			| U-turn 										||
-| Yield					| Yield											||
-| 100 km/h	      		| Bumpy Road					 				||
-| Slippery Road			| Slippery Road      							||
+|Speed Limit (20km/h) |pictogram||
+|Speed Limit (20km/h) |||
+|Speed Limit (30km/h) |zone sign||
+|Speed Limit (50km/h) |pictogram||
+|Speed Limit (50km/h) |||
+|No passing | ||
+|No entry | Funny modification / obscured ||
+|General caution| not centered||
+|Dangerous curve to the left| small ||
+|Dangerous curve to the left|||
+|Slippery road | ||
+|Road Work | pictogram ||
+|Pedestrians| painted on street||
+|Pedestrians|||
+|Keep right | ||
 
 
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
+The model was able to correctly guess x of the 15 traffic signs, which gives an accuracy of xx. This compares favorably to the accuracy on the test set of ...
 
-### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
+### 3. Top 5 softmax probabilities of predictions
+Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
 The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
 
