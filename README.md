@@ -64,7 +64,7 @@ I used a combination of all functions to augement the data set. In the following
 ![alt text][imgAugemented]
 
 Every label was augemented by at least 10 images until the label contained at least 500 images.
-After augementaion, the training data contained ... images. The labels are distributed more equally now.
+After augementaion, the training data contained 39459 images. The labels are distributed more equally now.
 ![alt text][label_dist2]
 
 
@@ -86,25 +86,24 @@ Source: Yan LeCun
 
 The LeNet Convolutional network was adapted to the traffic sign recognition problem by changing the output classes to 43 and adding dropout layers in the fully connected layers in order to prevent overfitting. The resulting model architecture is the following:
 
-| Layer         		 |     Description	         | Input | Output | Parameters |
+| Layer         		 |     Description	         | Input    | Output    | Parameters |
 |:----------------------:|:-------------------------:|:-------: | :--------:|:----------:|
-| Convolution 5x5        | 1x1 stride, valid padding | 32x32x1  | 28x28x6   | 582  |
-| Activation			 | ReLU					     |          |           |      |
-| Max pooling	      	 | 2x2 stride				 | 28x28x6  | 14x14x6   |      |
-| Convolution 5x5        | 1x1 stride, valid padding | 14x14x6  | 10x10x12  |      |
-| Activation			 | ReLU					     |          |           |      |
-| Max pooling	      	 | 2x2 stride				 | 10x10x12 | 5x5x12    |      |
-| Flatten                | from 3D to 1D             | 5x5x12   | 400       |      |
-| Fully connected		 |          				 | 400      | 200       |      |
-| Activation			 | ReLU					     |          |           |      |
-| Dropout                | Probability: 75%          |          |           |      |          
-| Fully connected		 |          				 | 200      | 84        |      |
-| Activation			 | ReLU					     |          |           |      |
-| Dropout                | Probability: 75%          |          |           |      |
-| Fully connected(Logits)|							 | 84       | 43        |      |
-| Softmax                |                           |          |           |      |
-|:----------------------:|:-------------------------:|:-------: | :--------:|:----------:|
-| Total                  |                           |          |           |  ???    |
+| Convolution 5x5        | 1x1 stride, valid padding | 32x32x1  | 28x28x6   | 906        |
+| Activation			 | ReLU					     |          |           |            |
+| Max pooling	      	 | 2x2 stride				 | 28x28x6  | 14x14x6   |            |
+| Convolution 5x5        | 1x1 stride, valid padding | 14x14x6  | 10x10x12  | 3612       |
+| Activation			 | ReLU					     |          |           |            |
+| Max pooling	      	 | 2x2 stride				 | 10x10x12 | 5x5x12    |            |
+| Flatten                | from 3D to 1D             | 5x5x12   | 400       |            |
+| Fully connected		 |          				 | 400      | 200       | 80 200     |
+| Activation			 | ReLU					     |          |           |            |
+| Dropout                | Probability: 75%          |          |           |            |          
+| Fully connected		 |          				 | 200      | 84        | 16 884     |
+| Activation			 | ReLU					     |          |           |            |
+| Dropout                | Probability: 75%          |          |           |            |
+| Fully connected(Logits)|							 | 84       | 43        | 3655       |
+| Softmax                |                           |          |           |            |
+| Total                  |                           |          |           | 105 257    |
 
 
 I decided to use the basic LeNet model because my own modifications (inception layers, deeper networks,...) did not improve the accuracy significantly. Hence, I prefered using a simple model and rather finish the project than searching for the perfect solution. The LeNet architecture is already suited to the image dimensions and thus needs only few adaptions. Since more output classes (43 instead of 10) are present, a deeper or more complex convolutional network (e.g. based on AlexNet) would be better suited.
@@ -123,8 +122,6 @@ The following hyperparameters were used for training as they showed the best tra
 
 
 ### 4. Model validation
-e.g. training accuracy >> validation accuracy)
-
 After finding the right steps for image augmentation and preprocessing, only the hyperparameters were tuned. I tried several combinations and checked the behavior of the model for
 - overfitting e.g. if training accuracy >> validation accuracy >> test accuracy -> increase dropout
 - oscillation of the accuracy -> decrease learning rate, increase batch size
@@ -133,6 +130,7 @@ After finding the right steps for image augmentation and preprocessing, only the
 
 
 My final model results were:
+
 |Data set  | Accuracy |
 |:--------:|:--------:|
 |Training  | ? |
@@ -143,67 +141,48 @@ My final model results were:
 ## Test the Model on New Images
 
 ### 1. German traffic signs from the internet
-The test images are a mixture of photos and pictograms at different cropings and perspectives. Also modified versions of the original traffic signs are present. I selected the following 15 traffic signs:
+The test images are a mixture of photos and pictograms at different cropings and perspectives. Also modified versions of the original traffic signs are present. I selected the following 15 traffic signs (and resized them to 32x32x3):
 
 ![alt text][imgTest]
 
 Short overview table of the traffic signes
 
-|Image| Difficulty|
-|:--:|:--:|
-|Speed Limit (20km/h) |pictogram|
-|Speed Limit (20km/h) ||
-|Speed Limit (30km/h) |zone sign|
-|Speed Limit (50km/h) |pictogram|
-|Speed Limit (50km/h) ||
-|No passing | |
-|No entry | Funny modification / obscured |
-|General caution| not centered|
-|Dangerous curve to the left| small |
-|Dangerous curve to the left||
-|Slippery road | |
-|Road Work | pictogram |
-|Pedestrians| painted on street|
-|Pedestrians||
-|Keep right | |
-
 There are images which belong to the most common classes ("Speed limit (50km/h)") with 5.8% presence in the original training data and image of classes with few data ("Speed limit (20km/h)", "Dangerous curve to the left", "Pedestrians").
 
 
 ### 2. Predictions of test images
-Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
+The trained model was then used to predict the classes of these 15 new images.
+Here are the results of the prediction. In the comment section are particularities of the images discussed which could affect the model performance.
 
-Here are the results of the prediction:
-
-| Image			        |     Prediction	        					| Probability|
-|:---------------------:|:---------------------------------------------:| :---:|
-|Speed Limit (20km/h) |pictogram||
-|Speed Limit (20km/h) |||
-|Speed Limit (30km/h) |zone sign||
-|Speed Limit (50km/h) |pictogram||
-|Speed Limit (50km/h) |||
-|No passing | ||
-|No entry | Funny modification / obscured ||
-|General caution| not centered||
-|Dangerous curve to the left| small ||
-|Dangerous curve to the left|||
-|Slippery road | ||
-|Road Work | pictogram ||
-|Pedestrians| painted on street||
-|Pedestrians|||
-|Keep right | ||
+| Image			        |     Prediction	        					| Probability | Comment |
+|:---------------------:|:---------------------------------------------:| :----------:|:--------|
+| Speed Limit (20km/h)  | Speed Limit () | | pictogram|
+| Speed Limit (20km/h)  | Speed Limit () | | |
+| Speed Limit (30km/h)  | Speed Limit () | |zone sign|
+| Speed Limit (50km/h)  | Speed Limit () | |pictogram|
+| Speed Limit (50km/h)  | Speed Limit () | ||
+| No passing            | No passing     |||
+| No entry              | No entry       ||Funny modification / obscured |
+| General caution       | ||not centered|
+| Dangerous curve to the left| ||small |
+| Dangerous curve to the left||||
+| Slippery road         | |||
+| Road Work             | ||pictogram |
+| Pedestrians           | ||painted on street|
+| Pedestrians           | Pedestrians ||
+| Keep right            | Keep right | 100.0 | |
 
 
-The model was able to correctly guess x of the 15 traffic signs, which gives an accuracy of xx. This compares favorably to the accuracy on the test set of ...
+The model was able to correctly guess x of the 15 traffic signs, which gives an accuracy of xx.
+This accuracy is far lower than the test accuracy. however, that is not surprising as particular difficult images were selected for prediction. Choosing only images which are very similar to the training data (centered, only photos, ...) the accuracy on the new images would be higher.
 
 ### 3. Top 5 softmax probabilities of predictions
-Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
-The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
+It can be generally observed that if the model got the right prediction, it was certain of it (>90%). On the other hand, if a wrong prediction was made, the model was not that certain of it.
 
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
+For the first image the model could detect clearly that it is a speed limit but it didn't pick the right limit:
 
-| Probability         	|     Prediction	        					| 
+| Probability         	|     Prediction (Speed Limit (20km/h)	       	| 
 |:---------------------:|:---------------------------------------------:| 
 | .60         			| Stop sign   									| 
 | .20     				| U-turn 										|
@@ -212,11 +191,13 @@ For the first image, the model is relatively sure that this is a stop sign (prob
 | .01				    | Slippery Road      							|
 
 
-For the second image ... 
+For the other 14 images, see the following print output:
+
 
 ### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
 was not done yet
 
+![alt text][softmax]
 
 ### Appendix: Calculation of model parameters
 The dimensions of every layer can be caluclated according to the following equations:
@@ -234,35 +215,35 @@ Variables:
 
 1. Convolution Layer
     * Dimensions:
-    \begin{equation}
+    `\begin{equation}
         W_{out} = \dfrac{W_{in} − W_{filter} + 2P}{S} + 1
     \end{equation}
     \begin{equation}
         D_{out} = N_{filter}
-    \end{equation}
+    \end{equation}`
 
     * Number of Parameters in this layer (parameter sharing!):
-    \begin{align}
+    `\begin{align}
         NP_{layer} &= NP_{filter} \cdot N_{filter} + NP_{bias} \\
                     &=  (W_{filter} \cdot H_{filter} \cdot N_{filter} + 1) \cdot D_{out}
-    \end{align}
+    \end{align}`
 
 2. Pooling Layer
 Pooling is as a convolution with a single filter. However, the filter is not defined by weights but by chosing the maximum/average/... . Hence, the same equation holds.
 
-    \begin{equation}
+    `\begin{equation}
         W_{out} = \dfrac{W_{in} − W_{filter} + 2P}{S} + 1
     \end{equation}
     \begin{equation}
         D_{out} = D_{in}
-    \end{equation}
+    \end{equation}`
 
 3. Fully Connected Layer
 
     Total parameters:
     Number of Parameters $NP$
-    \begin{align}
+    `\begin{align}
         NP_{layer} &= NP_{filter} \cdot N_{output,neurons} + NP_{bias} \\
                     &=  (W_{filter} \cdot H_{filter} \cdot N_{filter} + 1) \cdot W_{out} \cdot H_{out} \cdot D_{out}
-    \end{align}
+    \end{align}`
 
