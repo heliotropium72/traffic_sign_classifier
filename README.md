@@ -15,9 +15,9 @@ In this project, a traffic sign recognition classifier is build and trained usin
 [label_dist1]: ./report_images/labels1.png "Distribution of labels"
 [label_dist2]: ./report_images/labels2.png "Distribution of labels after augmentation"
 
-[softmax1]: ./report_images/softmax1.png "Softmax output 1"
-[softmax2]: ./report_images/softmax2.png "Softmax output 2"
-[softmax3]: ./report_images/softmax3.png "Softmax output 3"
+[softmax1]: ./report_images/softmax1.PNG "Softmax output 1"
+[softmax2]: ./report_images/softmax2.PNG "Softmax output 2"
+[softmax3]: ./report_images/softmax3.PNG "Softmax output 3"
 
 
 ### Dependencies
@@ -65,7 +65,7 @@ The dataset was augmentated by randomly modified copies of the original images. 
 - random crop (not applicable, without resizing separately)
 
 I used a combination of all functions to augement the data set. In the following is the result for a test image.
-![alt text][imgAugemented]
+![alt text][imgAugmented]
 
 Every label was augemented by at least 10 images until the label contained at least 500 images.
 After augementaion, the training data contained 39459 images. The labels are distributed more equally now.
@@ -203,8 +203,6 @@ For the other 14 images, see the following print output:
 
 ### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
 was not done yet
-
-![alt text][softmax]
 
 ### Appendix: Calculation of model parameters
 The dimensions of every layer can be caluclated according to the following equations:
