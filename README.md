@@ -15,6 +15,10 @@ In this project, a traffic sign recognition classifier is build and trained usin
 [label_dist1]: ./report_images/labels1.png "Distribution of labels"
 [label_dist2]: ./report_images/labels2.png "Distribution of labels after augmentation"
 
+[softmax1]: ./report_images/softmax1.png "Softmax output 1"
+[softmax2]: ./report_images/softmax2.png "Softmax output 2"
+[softmax3]: ./report_images/softmax3.png "Softmax output 3"
+
 
 ### Dependencies
 This notebook requires:
@@ -133,9 +137,9 @@ My final model results were:
 
 |Data set  | Accuracy |
 |:--------:|:--------:|
-|Training  | ? |
-|Validation| ? |
-|Test      | ?|
+|Training  | 99.8 % |
+|Validation| 94.3 % |
+|Test      | 92.5 % |
 
 
 ## Test the Model on New Images
@@ -156,43 +160,46 @@ Here are the results of the prediction. In the comment section are particulariti
 
 | Image			        |     Prediction	        					| Probability | Comment |
 |:---------------------:|:---------------------------------------------:| :----------:|:--------|
-| Speed Limit (20km/h)  | Speed Limit () | | pictogram|
-| Speed Limit (20km/h)  | Speed Limit () | | |
-| Speed Limit (30km/h)  | Speed Limit () | |zone sign|
-| Speed Limit (50km/h)  | Speed Limit () | |pictogram|
-| Speed Limit (50km/h)  | Speed Limit () | ||
-| No passing            | No passing     |||
-| No entry              | No entry       ||Funny modification / obscured |
-| General caution       | ||not centered|
-| Dangerous curve to the left| ||small |
-| Dangerous curve to the left||||
-| Slippery road         | |||
-| Road Work             | ||pictogram |
-| Pedestrians           | ||painted on street|
-| Pedestrians           | Pedestrians ||
+| Speed Limit (20km/h)  | Speed Limit (20km/h) | 94.1 | pictogram|
+| Speed Limit (20km/h)  | Speed Limit (20km/h) | 100.0 | |
+| Speed Limit (30km/h)  | Roundabout mandatory | 93.3 |zone sign|
+| Speed Limit (50km/h)  | Speed Limit (30km/h) | 100.0 |pictogram|
+| Speed Limit (50km/h)  | Speed Limit (50km/h) | 99.5 ||
+| No passing            | No passing           | 100.0 ||
+| No entry              | No entry       | 99.6 |Funny modification / obscured |
+| General caution       | Children crossing | 95.2 |not centered|
+| Dangerous curve to the left| Roundabout mandatory | 35.0 |small |
+| Dangerous curve to the left| Dangerous curve to the left | 100.0 ||
+| Slippery road         | Keep right | 77.4 ||
+| Road Work             | Road Work | 100.0 |pictogram |
+| Pedestrians           | Right-of-way at the next intersection | 60.9 |painted on street|
+| Pedestrians           | General caution | 98.7 | dirt|
 | Keep right            | Keep right | 100.0 | |
 
 
-The model was able to correctly guess x of the 15 traffic signs, which gives an accuracy of xx.
-This accuracy is far lower than the test accuracy. however, that is not surprising as particular difficult images were selected for prediction. Choosing only images which are very similar to the training data (centered, only photos, ...) the accuracy on the new images would be higher.
+The model was able to correctly guess 8 of the 15 traffic signs, which gives an accuracy of 53%.
+This accuracy is far lower than the test accuracy. However, that is not surprising as particular difficult images were selected for prediction. Choosing only images which are very similar to the training data (centered, only photos, ...) the accuracy on the new images would be higher. Especially the traffic sign "General caution" was both hard to predict (not in the top 5 softmax probabilities) and was predicted with high probability (98.7) as a false positive.
 
 ### 3. Top 5 softmax probabilities of predictions
 
-It can be generally observed that if the model got the right prediction, it was certain of it (>90%). On the other hand, if a wrong prediction was made, the model was not that certain of it.
+It can be generally observed that if the model got the right prediction, it was certain of it (>94%). On the other hand, if a wrong prediction was made, the probability was generally lower but could be also as high as 100.0% for a wrong prediction.
 
 For the first image the model could detect clearly that it is a speed limit but it didn't pick the right limit:
 
-| Probability         	|     Prediction (Speed Limit (20km/h)	       	| 
+| Probability in %      |     Prediction (Speed Limit (20km/h)       	| 
 |:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+| 94.1         			| Speed Limit (20km/h   						| 
+| 5.8     				| Speed Limit (20km/h							|
+| 0.1					| End of speed limit (80km/h)					|
+| 0.0	      			| Roundabout mandatory			 				|
+| 0.0				    | End of all speed and passing limits      		|
 
 
 For the other 14 images, see the following print output:
 
+![alt text][softmax1]
+![alt text][softmax2]
+![alt text][softmax3]
 
 ### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
 was not done yet
